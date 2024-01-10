@@ -1,6 +1,5 @@
--   table school:
-    | STT | FIELD | TYPE | NOTE |
-    | :------------ |:---------------:| -----:|
-    | col 3 is | some wordy text | $1600 |
-    | col 2 is | centered | $12 |
-    | zebra stripes | are neat | $1 |
+| STT | FIELD          | TYPE     | NOTE |
+|-----|----------------|----------|------|
+| 1   | id             | varchar  |      |
+| 2   | school_name    | nvarchar |      |
+| 3   | school_adrress | nvarchar |      |
