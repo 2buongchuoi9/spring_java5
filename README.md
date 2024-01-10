@@ -8,6 +8,7 @@ table: schools
 | 3   | school_adrress | nvarchar |      |
 | 4   | school_email   | varchar  |      |
 | 5   | school_logo    | varchar  |      |
+| 6   | scholl_status | bit  |      |
 
 table: class
 
@@ -16,7 +17,7 @@ table: class
 | 1   | id         | varchar  |      |
 | 2   | class_name | nvarchar |      |
 | 3   | class_code | varchar  |      |
-| 4   | class_status | varchar  |      |
+| 4   | class_status | bit  |      |
 
 | STT | FIELD             | TYPE     | NOTE        |
 | --- | ----------------- | -------- | ----------- |
@@ -29,3 +30,4 @@ table: class
 | 7   | student_adrress   | nvarchar |             |
 | 8   | student_email     | varchar  |             |
 | 9   | student_phone     | varchar  |             |
+| 4   | studen_status | varchar  |      |
