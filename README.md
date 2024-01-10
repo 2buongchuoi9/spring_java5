@@ -19,6 +19,8 @@ table: class
 | 3   | class_code | varchar  |      |
 | 4   | class_status | bit  |      |
 
+table: student
+
 | STT | FIELD             | TYPE     | NOTE        |
 | --- | ----------------- | -------- | ----------- |
 | 1   | id                | varchar  |             |
