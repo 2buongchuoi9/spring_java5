@@ -51,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       Constans.API_V1 + "/favicon.ico",
       FREE_REQUEST.AUTH + "/login",
       FREE_REQUEST.AUTH + "/register",
+      FREE_REQUEST.AUTH + "/refresh-token",
       "/test-1",
       "/v2/api-docs",
       "/v3/api-docs",
@@ -73,9 +74,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
 
     try {
-      System.out.println(req.getServletPath());
+      System.out.println(req.getMethod() + "::::" + req.getServletPath());
 
-      if (checkRequest(req)) {
+      if (req.getMethod().equals("GET") || checkRequest(req)) {
         System.out.println("qua");
         filterChain.doFilter(req, res);
         return;
@@ -84,7 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       // check x-client-id in header
       String clientId = req.getHeader(HEADER.X_CLIENT_ID);
       if (clientId == null)
-        throw new UnauthorizeError("x-client-id has much in header");
+        throw new UnauthorizeError("x-client-id has must in header");
 
       KeyToken keyStore = keyRepo.findByUserId(clientId)
           .orElseThrow(() -> new UnauthorizeError("invalid x-client-id in header"));
@@ -92,7 +93,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       // check authorization in header
       String token = req.getHeader(HEADER.AUTHORIZATION);
       if (token == null)
-        throw new UnauthorizeError("authorization has much in header");
+        throw new UnauthorizeError("authorization has must in header");
 
       // // validad token
       // if (!jwtService.validateToken(token, keyStore.getPublicKey()))
@@ -114,13 +115,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
       filterChain.doFilter(req, res);
     } catch (Exception e) {
+      System.out.println(":::::::::::::::::" + e.getMessage());
       exceptionResolver.resolveException(req, res, null, e);
     }
   }
 
   private boolean checkRequest(HttpServletRequest req) {
     String path = req.getServletPath();
-    System.out.println("::::::::::::::::::::::::::" + path);
     return list.stream().anyMatch(path::startsWith);
   }
 

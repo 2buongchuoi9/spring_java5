@@ -34,9 +34,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(NotFoundException.class)
+  @ExceptionHandler(NotFoundError.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<ErrorResponse> handlerNotFoundError(NotFoundException ex) {
+  public ResponseEntity<ErrorResponse> handlerNotFoundError(NotFoundError ex) {
     return new ResponseEntity<>(new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 
@@ -46,9 +46,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(DuplicateRecordException.class)
+  @ExceptionHandler(DuplicateRecordError.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ErrorResponse> handlerDuplicateRecordException(DuplicateRecordException ex) {
+  public ResponseEntity<ErrorResponse> handlerDuplicateRecordException(DuplicateRecordError ex) {
     return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
@@ -110,7 +110,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(AccessDeniedException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
   ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
-    return new ResponseEntity<>(new ErrorResponse(HttpStatus.FORBIDDEN, "No permission.", ex.getMessage()),
+    return new ResponseEntity<>(
+        new ErrorResponse(HttpStatus.FORBIDDEN, "You are not have permission.", ex.getMessage()),
         HttpStatus.FORBIDDEN);
   }
 

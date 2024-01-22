@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 public class User implements UserDetails {
   @Id
-  private String Id;
+  private String id;
 
   private String name;
 

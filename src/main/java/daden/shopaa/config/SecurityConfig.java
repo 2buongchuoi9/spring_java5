@@ -2,6 +2,7 @@ package daden.shopaa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -36,11 +37,9 @@ public class SecurityConfig {
 
   private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**",
       Constans.API_V1 + "/cc",
-      Constans.API_V1 + "/favicon.ico",
-      Constans.API_V1 + "/cc",
-      Constans.API_V1 + "/favicon.ico",
       FREE_REQUEST.AUTH + "/login",
       FREE_REQUEST.AUTH + "/register",
+      Constans.API_V1 + "/favicon.ico",
       "/v2/api-docs",
       "/v3/api-docs",
       "/v3/api-docs/**",
@@ -64,12 +63,13 @@ public class SecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            req -> req.requestMatchers(WHITE_LIST_URL).permitAll()
-                // req -> req.requestMatchers("/**").permitAll()
+            req -> req
+                .requestMatchers(WHITE_LIST_URL).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                 .anyRequest()
                 .authenticated())
         .authenticationProvider(authenticationProvider)
-        .httpBasic(AbstractHttpConfigurer::disable)
+        // .httpBasic(AbstractHttpConfigurer::disable)
         // .httpBasic(httpBasic ->
         // httpBasic.authenticationEntryPoint(customBasciAuthEntryPoint))
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

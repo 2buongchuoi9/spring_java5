@@ -7,5 +7,7 @@ import daden.shopaa.entity.Category;
 
 @Repository
 public interface CategoryRepo extends MongoRepository<Category, String> {
+  boolean existsByTitle(String title);
 
+  boolean existsByTitleAndIdNot(String title, String id);
 }

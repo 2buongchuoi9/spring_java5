@@ -11,7 +11,7 @@ public final class Constans {
     public static final String[] LIST = {
         "/favicon.ico",
         PRODUCTS,
-        AUTH
+        AUTH,
     };
   }
 
@@ -19,5 +19,11 @@ public final class Constans {
     public static final String X_CLIENT_ID = "x-client-id";
     public static final String AUTHORIZATION = "authorization";
     public static final String REFRESHTOKEN = "x-rtoken-id";
+  }
+
+  public final class HASROLE {
+    public static final String ADMIN = "hasAuthority('ADMIN')";
+    public static final String USER = "hasAuthority('USER')";
+    public static final String MOD = "hasAuthority('MOD')";
   }
 }
