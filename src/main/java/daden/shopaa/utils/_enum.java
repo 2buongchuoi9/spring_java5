@@ -14,4 +14,24 @@ public final class _enum {
     GOOGLE,
   }
 
+  public enum StateCartEnum {
+    ACTIVE,
+    COMPLETED,
+    FAILED,
+    PENDING,
+
+  }
+
+  public enum StateOrderEnum {
+    PENDING,
+    CONFIRMED,
+    SHIPPED,
+    CANCELLED,
+    DELIVERED,
+  }
+
+  public enum StatusProductEnum {
+    DRAFT, PUBLISHED
+  }
+
 }

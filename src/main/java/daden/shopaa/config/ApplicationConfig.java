@@ -12,15 +12,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import daden.shopaa.Auth.JwtAuthenticationFilter;
-import daden.shopaa.repository.ShopRepo;
+import daden.shopaa.entity.listent.ProductVariationListener;
+import daden.shopaa.exceptions.CustomExceptionHandler;
+import daden.shopaa.repository.UserRepo;
 
 @Configuration
 @EnableWebSecurity
 public class ApplicationConfig {
   @Autowired
-  private ShopRepo shopRepo;
+  private UserRepo shopRepo;
 
   @Bean
   public JwtAuthenticationFilter jwtAuthenticationFilter() {

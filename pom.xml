@@ -33,11 +33,22 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 
 
@@ -65,6 +76,14 @@
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.1</version> <!-- Chọn phiên bản phù hợp với dự án của bạn -->
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.github.slugify/slugify -->
+		<dependency>
+			<groupId>com.github.slugify</groupId>
+			<artifactId>slugify</artifactId>
+			<version>3.0.6</version>
+		</dependency>
+
 		
 		
 	</dependencies>

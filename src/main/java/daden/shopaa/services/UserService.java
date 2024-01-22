@@ -7,32 +7,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import daden.shopaa.Auth.JwtService;
+import daden.shopaa.entity.User;
 import daden.shopaa.exceptions.BabRequestError;
 import daden.shopaa.exceptions.NotFoundException;
-import daden.shopaa.exceptions.UnKnowError;
-import daden.shopaa.models.ShopModel;
-import daden.shopaa.repository.ShopRepo;
-import daden.shopaa.req.LoginReq;
-import daden.shopaa.req.RegisterReq;
-import daden.shopaa.res.LoginRes;
-import daden.shopaa.res.LoginRes.TokenStore;
+import daden.shopaa.repository.UserRepo;
+import daden.shopaa.dto.req.LoginReq;
+import daden.shopaa.dto.req.RegisterReq;
+import daden.shopaa.dto.res.LoginRes;
+import daden.shopaa.dto.res.LoginRes.TokenStore;
 
 @Service
-public class ShopService {
+public class UserService {
   @Autowired
   private JwtService jwtService;
   @Autowired
   private KeyTokenService keyTokenService;
   @Autowired
-  private ShopRepo shopRepo;
+  private UserRepo shopRepo;
   @Autowired
   private PasswordEncoder passwordEncoder;
 
   public LoginRes loginLocal(LoginReq loginReq) {
 
     // check email password
-    ShopModel foundShop = shopRepo.findByEmail(loginReq.getEmail())
+    User foundShop = shopRepo.findByEmail(loginReq.getEmail())
         .orElseThrow(() -> new NotFoundException("shop is not registered"));
+
+    System.out.println("::::::::::::::::::" + passwordEncoder.encode(loginReq.getPassword()));
+
+    if (!passwordEncoder.matches(loginReq.getPassword(), foundShop.getPassword()))
+      throw new BabRequestError("password is not true");
 
     KeyPair keys = JwtService.generatorKeyPair();
 
@@ -43,18 +47,17 @@ public class ShopService {
         foundShop.getId(),
         jwtService.getStringFromPublicKey(keys.getPublic()),
         tokens.getRefreshToken()))
-      throw new UnKnowError("fail to create keyStore");
+      throw new RuntimeException("fail to create keyStore");
 
     return new LoginRes(tokens, foundShop);
   }
 
-  public ShopModel registerLocal(RegisterReq registerReq) {
-
-    // check email password
+  public User registerLocal(RegisterReq registerReq) {
+    // check email
     if (shopRepo.existsByEmail(registerReq.getEmail()))
       throw new BabRequestError("shop is registered");
 
-    return shopRepo.save(ShopModel.builder()
+    return shopRepo.save(User.builder()
         .name(registerReq.getName())
         .email(registerReq.getEmail())
         .password(passwordEncoder.encode(registerReq.getPassword()))

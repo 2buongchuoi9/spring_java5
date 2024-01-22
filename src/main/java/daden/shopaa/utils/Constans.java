@@ -6,7 +6,8 @@ public final class Constans {
   public final class FREE_REQUEST {
     public static final String PRODUCTS = API_V1 + "/products",
         ALL = API_V1 + "/",
-        AUTH = API_V1 + "/auth";
+        AUTH = API_V1 + "/auth",
+        CATE = API_V1 + "/category";
     public static final String[] LIST = {
         "/favicon.ico",
         PRODUCTS,

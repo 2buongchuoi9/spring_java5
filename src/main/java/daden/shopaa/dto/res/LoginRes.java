@@ -1,6 +1,6 @@
-package daden.shopaa.res;
+package daden.shopaa.dto.res;
 
-import daden.shopaa.models.ShopModel;
+import daden.shopaa.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginRes {
   private TokenStore Token;
-  private ShopModel shop;
+  private User shop;
 
   /**
    * TokenStore

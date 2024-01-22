@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import daden.shopaa.models.KeyTokenModel;
+import daden.shopaa.entity.KeyToken;
 import daden.shopaa.repository.KeyTokenRepo;
 
 @Service
@@ -16,13 +16,13 @@ public class KeyTokenService {
   public boolean createKeyStore(String userId, String publicKey, String refresshToken) {
 
     try {
-      Optional<KeyTokenModel> oKey = keyRepo.findByUserId(userId);
+      Optional<KeyToken> oKey = keyRepo.findByUserId(userId);
       if (oKey.isPresent()) {
-        KeyTokenModel k = oKey.get();
+        KeyToken k = oKey.get();
         k.setPublicKey(publicKey);
         keyRepo.save(k);
       } else
-        keyRepo.save(KeyTokenModel.builder()
+        keyRepo.save(KeyToken.builder()
             .userId(userId)
             .publicKey(publicKey)
             .refreshToken(refresshToken)

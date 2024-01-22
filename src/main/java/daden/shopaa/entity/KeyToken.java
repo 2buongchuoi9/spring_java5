@@ -1,4 +1,4 @@
-package daden.shopaa.models;
+package daden.shopaa.entity;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import lombok.Data;
 @Document("Keys")
 @Data
 @Builder
-public class KeyTokenModel {
+public class KeyToken {
   @Id
   private String id;
 

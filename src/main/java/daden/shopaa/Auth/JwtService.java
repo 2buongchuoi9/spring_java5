@@ -29,7 +29,6 @@ import java.util.Date;
 
 import org.springframework.stereotype.Service;
 
-import daden.shopaa.exceptions.UnKnowError;
 import daden.shopaa.exceptions.UnauthorizeError;
 
 @Service
@@ -66,10 +65,10 @@ public class JwtService {
       return keyFactory.generatePublic(spec);
     } catch (InvalidKeySpecException e) {
       e.printStackTrace();
-      throw new UnKnowError(e.getMessage());
+      throw new RuntimeException(e.getMessage());
     } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
-      throw new UnKnowError(e.getMessage());
+      throw new RuntimeException(e.getMessage());
     }
   }
 

@@ -1,4 +1,4 @@
-package daden.shopaa.models;
+package daden.shopaa.entity;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,10 +16,10 @@ import daden.shopaa.utils._enum.*;
 import lombok.Builder;
 import lombok.Data;
 
-@Document(collection = "Shops")
+@Document(collection = "Users")
 @Builder
 @Data
-public class ShopModel implements UserDetails {
+public class User implements UserDetails {
   @Id
   private String Id;
 

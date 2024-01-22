@@ -14,4 +14,12 @@ import lombok.Setter;
 public class ErrorResponse {
   private HttpStatus status;
   private String message;
+  private Object data;
+
+  public ErrorResponse(HttpStatus status, String message) {
+    this.status = status;
+    this.message = message;
+    this.data = null;
+  }
+
 }

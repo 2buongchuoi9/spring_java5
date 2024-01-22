@@ -1,4 +1,4 @@
-package daden.shopaa.req;
+package daden.shopaa.dto.req;
 
 import lombok.Builder;
 import lombok.Data;

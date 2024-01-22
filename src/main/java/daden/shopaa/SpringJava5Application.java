@@ -7,12 +7,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import daden.shopaa.models.ShopModel;
+import daden.shopaa.entity.User;
+import daden.shopaa.repository.UserRepo;
 
-import daden.shopaa.repository.ShopRepo;
-import daden.shopaa.req.LoginReq;
-import daden.shopaa.res.LoginRes;
-import daden.shopaa.services.ShopService;
+import daden.shopaa.services.UserService;
 import daden.shopaa.utils._enum.RoleShopEnum;
 
 @SpringBootApplication
