@@ -6,11 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 import daden.shopaa.entity.User;
 import daden.shopaa.repository.UserRepo;
 
 import daden.shopaa.services.UserService;
+import daden.shopaa.utils.CookieUtils;
 import daden.shopaa.utils._enum.RoleShopEnum;
 
 @SpringBootApplication
@@ -21,13 +23,8 @@ public class SpringJava5Application {
 	}
 
 	// @Bean
-	// CommandLineRunner runner(ShopService shopService) {
+	// CommandLineRunner runner() {
 	// return args -> {
-	// LoginRes l =
-	// shopService.loginLocal(LoginReq.builder().email("root@gmail.com").password("123").build());
-	// System.out.println(l.getAccessToken());
-	// System.out.println(l.getRefreshToken());
-	// System.out.println(l.getShop());
 	// };
 	// }
 

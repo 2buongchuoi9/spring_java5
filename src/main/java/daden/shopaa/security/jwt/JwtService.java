@@ -1,4 +1,4 @@
-package daden.shopaa.Auth;
+package daden.shopaa.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

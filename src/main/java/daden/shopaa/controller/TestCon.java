@@ -11,7 +11,11 @@ import daden.shopaa.utils._enum.RoleShopEnum;
 
 import java.util.Arrays;
 
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Security;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -37,14 +41,20 @@ public class TestCon {
   @GetMapping("/test-1")
   public Object testA() {
 
-    Category categoryModel = Category.builder()
-        .title("title")
-        .description("des")
-        .build();
+    // Category categoryModel = Category.builder()
+    // .title("title")
+    // .description("des")
+    // .build();
 
-    categoryRepo.save(categoryModel);
+    // categoryRepo.save(categoryModel);
 
     return categoryRepo.findAll();
+  }
+
+  @GetMapping("/info")
+  public Object info() {
+
+    return "hello";
   }
 
 }

@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import daden.shopaa.Auth.JwtService;
 import daden.shopaa.entity.KeyToken;
 import daden.shopaa.entity.User;
 import daden.shopaa.exceptions.UnauthorizeError;
 import daden.shopaa.repository.KeyTokenRepo;
+import daden.shopaa.security.jwt.JwtService;
 import daden.shopaa.dto.req.LoginReq;
 import daden.shopaa.dto.req.RegisterReq;
 import daden.shopaa.dto.res.LoginRes;
@@ -44,8 +44,7 @@ public class AuthController {
 
   @PostMapping("/refresh-token")
   public ResponseEntity<LoginRes> refeshToken(HttpServletRequest req) {
-
     return ResponseEntity.ok().body(shopService.handleRefeshToken(req));
-
   }
+
 }

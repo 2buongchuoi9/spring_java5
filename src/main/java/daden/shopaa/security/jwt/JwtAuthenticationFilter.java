@@ -1,4 +1,4 @@
-package daden.shopaa.Auth;
+package daden.shopaa.security.jwt;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -22,6 +22,7 @@ import daden.shopaa.entity.KeyToken;
 import daden.shopaa.exceptions.BabRequestError;
 import daden.shopaa.exceptions.UnauthorizeError;
 import daden.shopaa.repository.KeyTokenRepo;
+import daden.shopaa.security.UserRootService;
 import daden.shopaa.utils.Constans;
 import daden.shopaa.utils.Constans.HEADER;
 import daden.shopaa.utils.Constans.FREE_REQUEST;
@@ -40,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Autowired
   private KeyTokenRepo keyRepo;
   @Autowired
-  private UserDetailsService userDetailsService;
+  private UserRootService userRootService;
 
   @Autowired
   @Qualifier("handlerExceptionResolver")
@@ -52,6 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FREE_REQUEST.AUTH + "/login",
       FREE_REQUEST.AUTH + "/register",
       FREE_REQUEST.AUTH + "/refresh-token",
+      Constans.API_V1 + "/oauth2",
+      "/login",
       "/test-1",
       "/v2/api-docs",
       "/v3/api-docs",
@@ -103,7 +106,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       if (userEmail == null)
         throw new UnauthorizeError("decode token is fail");
 
-      UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+      UserDetails userDetails = userRootService.loadUserByUsername(userEmail);
 
       UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
           userDetails,

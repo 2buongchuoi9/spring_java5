@@ -2,7 +2,10 @@ package daden.shopaa.entity;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -10,16 +13,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import daden.shopaa.utils._enum.*;
-
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Document(collection = "Users")
-@Builder
 @Data
-public class User implements UserDetails {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User {
   @Id
   private String id;
 
@@ -28,10 +37,13 @@ public class User implements UserDetails {
   @Indexed(unique = true)
   private String email;
 
+  private String image;
+
+  @JsonIgnore
   private String password;
 
   @Builder.Default
-  private List<RoleShopEnum> roles = Arrays.asList(RoleShopEnum.USER);
+  private Set<RoleShopEnum> roles = Set.of(RoleShopEnum.USER);
 
   @Builder.Default
   private Boolean status = true;
@@ -43,44 +55,6 @@ public class User implements UserDetails {
   private AuthTypeEnum authType = AuthTypeEnum.LOCAL;
 
   @Builder.Default
-  private String googleId = null;
+  private String oAuth2Id = null;
 
-  @Builder.Default
-  private String facebookId = null;
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.getRoles().stream().map(v -> new SimpleGrantedAuthority(v.name())).toList();
-  }
-
-  @Override
-  public String getPassword() {
-    return this.password;
-  }
-
-  @Override
-  public String getUsername() {
-    return this.getEmail();
-
-  }
-
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
-
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
 }

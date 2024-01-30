@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import daden.shopaa.Auth.JwtService;
 import daden.shopaa.entity.KeyToken;
 import daden.shopaa.entity.User;
 import daden.shopaa.exceptions.BabRequestError;
@@ -17,26 +20,25 @@ import daden.shopaa.exceptions.NotFoundError;
 import daden.shopaa.exceptions.UnauthorizeError;
 import daden.shopaa.repository.KeyTokenRepo;
 import daden.shopaa.repository.UserRepo;
+import daden.shopaa.security.UserRoot;
+import daden.shopaa.security.jwt.JwtService;
 import daden.shopaa.utils.Constans.HEADER;
 import io.swagger.v3.oas.models.headers.Header;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import daden.shopaa.dto.req.LoginReq;
 import daden.shopaa.dto.req.RegisterReq;
 import daden.shopaa.dto.res.LoginRes;
 import daden.shopaa.dto.res.LoginRes.TokenStore;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-  @Autowired
-  private JwtService jwtService;
-  @Autowired
-  private KeyTokenService keyTokenService;
-  @Autowired
-  private UserRepo userRepo;
-  @Autowired
-  private KeyTokenRepo keyRepo;
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  private final JwtService jwtService;
+  private final KeyTokenService keyTokenService;
+  private final UserRepo userRepo;
+  private final KeyTokenRepo keyRepo;
+  private final PasswordEncoder passwordEncoder;
 
   public LoginRes loginLocal(LoginReq loginReq) {
 
@@ -128,4 +130,5 @@ public class UserService {
     return new LoginRes(newTokens, foundUser);
 
   }
+
 }
