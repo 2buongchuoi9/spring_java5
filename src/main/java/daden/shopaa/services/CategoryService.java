@@ -3,8 +3,11 @@ package daden.shopaa.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import daden.shopaa.dto.PageCustom;
 import daden.shopaa.dto.req.CategoryReq;
 import daden.shopaa.entity.Category;
 import daden.shopaa.exceptions.DuplicateRecordError;
@@ -49,6 +52,7 @@ public class CategoryService {
       throw new NotFoundError("parentId", parentId);
 
     return cateRepo.save(Category.builder()
+        .id(id)
         .parentId(parentId)
         .title(categoryReq.getTitle())
         .description(categoryReq.getDescription())
@@ -57,9 +61,7 @@ public class CategoryService {
   }
 
   public List<Category> findAll() {
-
     return cateRepo.findAll();
-
   }
 
 }

@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +29,7 @@ import daden.shopaa.utils.Constans.HEADER;
 import io.swagger.v3.oas.models.headers.Header;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import daden.shopaa.dto.PageCustom;
 import daden.shopaa.dto.req.LoginReq;
 import daden.shopaa.dto.req.RegisterReq;
 import daden.shopaa.dto.res.LoginRes;
@@ -129,6 +133,11 @@ public class UserService {
 
     return new LoginRes(newTokens, foundUser);
 
+  }
+
+  public PageCustom<User> findAll(Pageable pageable) {
+    Page<User> page = userRepo.findAll(pageable);
+    return new PageCustom<User>(page);
   }
 
 }

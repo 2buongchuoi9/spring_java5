@@ -27,6 +27,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import daden.shopaa.dto.MainResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,26 +37,26 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(NotFoundError.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<ErrorResponse> handlerNotFoundError(NotFoundError ex) {
-    return new ResponseEntity<>(new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage()), HttpStatus.NOT_FOUND);
+  public ResponseEntity<MainResponse> handlerNotFoundError(NotFoundError ex) {
+    return new ResponseEntity<>(new MainResponse(HttpStatus.NOT_FOUND, ex.getMessage()), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(BabRequestError.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ErrorResponse> handlerBadRequestError(BabRequestError ex) {
-    return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<MainResponse> handlerBadRequestError(BabRequestError ex) {
+    return new ResponseEntity<>(new MainResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(DuplicateRecordError.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ErrorResponse> handlerDuplicateRecordException(DuplicateRecordError ex) {
-    return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
+  public ResponseEntity<MainResponse> handlerDuplicateRecordException(DuplicateRecordError ex) {
+    return new ResponseEntity<>(new MainResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(UnauthorizeError.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public ResponseEntity<ErrorResponse> handlerUnauthorizeError(UnauthorizeError ex) {
-    return new ResponseEntity<>(new ErrorResponse(HttpStatus.UNAUTHORIZED,
+  public ResponseEntity<MainResponse> handlerUnauthorizeError(UnauthorizeError ex) {
+    return new ResponseEntity<>(new MainResponse(HttpStatus.UNAUTHORIZED,
         ex.getMessage()),
         HttpStatus.UNAUTHORIZED);
 
@@ -63,8 +64,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   // Xử lý tất cả các exception chưa được khai báo
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handlerException(Exception ex) {
-    ErrorResponse err = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+  public ResponseEntity<MainResponse> handlerException(Exception ex) {
+    MainResponse err = new MainResponse(HttpStatus.INTERNAL_SERVER_ERROR,
         ex.getMessage());
 
     return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -109,9 +110,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(AccessDeniedException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+  ResponseEntity<MainResponse> handleAccessDeniedException(AccessDeniedException ex) {
     return new ResponseEntity<>(
-        new ErrorResponse(HttpStatus.FORBIDDEN, "You are not have permission.", ex.getMessage()),
+        new MainResponse(HttpStatus.FORBIDDEN, "You are not have permission.", ex.getMessage()),
         HttpStatus.FORBIDDEN);
   }
 

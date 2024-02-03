@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginRes {
   private TokenStore Token;
-  private User shop;
+  private User user;
 
   /**
    * TokenStore

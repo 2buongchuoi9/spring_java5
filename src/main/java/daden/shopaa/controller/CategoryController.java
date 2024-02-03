@@ -3,6 +3,7 @@ package daden.shopaa.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import daden.shopaa.dto.MainResponse;
 import daden.shopaa.dto.req.CategoryReq;
 import daden.shopaa.entity.Category;
 import daden.shopaa.services.CategoryService;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +42,8 @@ public class CategoryController {
   @Operation(summary = "update category")
   @PreAuthorize(HASROLE.ADMIN)
   @PostMapping("/{id}")
-  public ResponseEntity<Category> update(@PathVariable String id, @RequestBody CategoryReq categoryReq) {
-    return ResponseEntity.ok().body(categoryService.updateCategory(id, categoryReq));
+  public ResponseEntity<MainResponse<Category>> update(@PathVariable String id, @RequestBody CategoryReq categoryReq) {
+    return ResponseEntity.ok().body(MainResponse.oke(categoryService.updateCategory(id, categoryReq)));
   }
 
   @Operation(summary = "get all category")

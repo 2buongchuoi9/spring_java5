@@ -4,6 +4,7 @@ import daden.shopaa.entity.Product;
 import daden.shopaa.entity.Rating;
 import daden.shopaa.repository.ProductRepo;
 import daden.shopaa.repository.RatingRepo;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -13,12 +14,10 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class RatingListener extends AbstractMongoEventListener<Rating> {
-
-    @Autowired
-    private ProductRepo productRepo;
-    @Autowired
-    private RatingRepo ratingRepo;
+    private final ProductRepo productRepo;
+    private final RatingRepo ratingRepo;
 
     @Override
     public void onAfterSave(AfterSaveEvent<Rating> event) {

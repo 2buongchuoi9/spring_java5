@@ -34,4 +34,8 @@ public final class _enum {
     DRAFT, PUBLISHED
   }
 
+  public enum TypeDiscount {
+    FIXED_AMOUNT, PERCENTAGE_AMOUNT
+  }
+
 }

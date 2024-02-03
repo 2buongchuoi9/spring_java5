@@ -12,6 +12,7 @@ import daden.shopaa.entity.User;
 import daden.shopaa.exceptions.UnauthorizeError;
 import daden.shopaa.repository.KeyTokenRepo;
 import daden.shopaa.security.jwt.JwtService;
+import daden.shopaa.dto.MainResponse;
 import daden.shopaa.dto.req.LoginReq;
 import daden.shopaa.dto.req.RegisterReq;
 import daden.shopaa.dto.res.LoginRes;
@@ -33,18 +34,18 @@ public class AuthController {
   UserService shopService;
 
   @PostMapping("/login")
-  public ResponseEntity<LoginRes> login(@RequestBody LoginReq loginReq) {
-    return ResponseEntity.ok().body(shopService.loginLocal(loginReq));
+  public ResponseEntity<MainResponse<LoginRes>> login(@RequestBody LoginReq loginReq) {
+    return ResponseEntity.ok().body(MainResponse.oke(shopService.loginLocal(loginReq)));
   }
 
   @PostMapping("/register")
-  public ResponseEntity<User> register(@RequestBody RegisterReq registerReq) {
-    return ResponseEntity.ok().body(shopService.registerLocal(registerReq));
+  public ResponseEntity<MainResponse<User>> register(@RequestBody RegisterReq registerReq) {
+    return ResponseEntity.ok().body(MainResponse.oke(shopService.registerLocal(registerReq)));
   }
 
   @PostMapping("/refresh-token")
-  public ResponseEntity<LoginRes> refeshToken(HttpServletRequest req) {
-    return ResponseEntity.ok().body(shopService.handleRefeshToken(req));
+  public ResponseEntity<MainResponse<LoginRes>> refeshToken(HttpServletRequest req) {
+    return ResponseEntity.ok().body(MainResponse.oke(shopService.handleRefeshToken(req)));
   }
 
 }

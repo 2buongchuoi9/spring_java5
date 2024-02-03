@@ -47,6 +47,9 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     // clearAuthenticationAttributes(request, response);
     getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
+    // response.getWriter()
+
   }
 
   private TokenStore loginWithOAuth2(User user) {

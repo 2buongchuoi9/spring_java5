@@ -54,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FREE_REQUEST.AUTH + "/register",
       FREE_REQUEST.AUTH + "/refresh-token",
       Constans.API_V1 + "/oauth2",
+      "/api/v1/category/**",
       "/login",
       "/test-1",
       "/v2/api-docs",
@@ -85,6 +86,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return;
       }
 
+      System.out.println("test::::::::" + req.getHeader(HEADER.AUTHORIZATION));
+
       // check x-client-id in header
       String clientId = req.getHeader(HEADER.X_CLIENT_ID);
       if (clientId == null)
@@ -97,10 +100,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       String token = req.getHeader(HEADER.AUTHORIZATION);
       if (token == null)
         throw new UnauthorizeError("authorization has must in header");
-
-      // // validad token
-      // if (!jwtService.validateToken(token, keyStore.getPublicKey()))
-      // throw new UnauthorizeError("invalid token");
 
       String userEmail = jwtService.verifyToken(token, jwtService.getPublicKeyFromString(keyStore.getPublicKey()));
       if (userEmail == null)
