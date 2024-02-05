@@ -11,12 +11,15 @@ import org.springframework.stereotype.Component;
 import daden.shopaa.entity.Product;
 import daden.shopaa.entity.ProductVariation;
 import daden.shopaa.repository.ProductRepo;
+import daden.shopaa.repository.ProductVariationRepo;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class ProductVariationListener extends AbstractMongoEventListener<ProductVariation> {
   private final ProductRepo productRepo;
+  private final ProductVariationRepo variationRepo;
 
   // @Override
   // public void onBeforeSave(BeforeSaveEvent<ProductVariation> event) {
@@ -35,10 +38,11 @@ public class ProductVariationListener extends AbstractMongoEventListener<Product
   private void updateProductQuantity(ProductVariation productVariation) {
     String productId = productVariation.getProductId();
 
+    List<ProductVariation> variations = variationRepo.findByProductId(productId);
+
     Product product = productRepo.findById(productId).orElse(null);
-    if (product != null && product.getVariations() != null) {
-      int totalQuantity = product.getVariations().stream().mapToInt(ProductVariation::getQuantity).sum();
-      product.setQuantity(totalQuantity);
+    if (product != null && variations != null) {
+      product.setVariations(variations);
       productRepo.save(product);
     }
   }
