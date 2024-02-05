@@ -1,9 +1,10 @@
 package daden.shopaa.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import daden.shopaa.dto.MainResponse;
+import daden.shopaa.dto.model.MainResponse;
 import daden.shopaa.dto.req.CategoryReq;
 import daden.shopaa.entity.Category;
 import daden.shopaa.services.CategoryService;
@@ -48,8 +49,10 @@ public class CategoryController {
 
   @Operation(summary = "get all category")
   @GetMapping("")
-  public ResponseEntity<List<Category>> findAll() {
-    return ResponseEntity.ok().body(categoryService.findAll());
+  public ResponseEntity<MainResponse<List<Category>>> findAll(
+      @RequestParam(required = false) String id,
+      @RequestParam(required = false) String parentId) {
+    return ResponseEntity.ok().body(MainResponse.oke(categoryService.findAll(id, parentId)));
   }
 
 }

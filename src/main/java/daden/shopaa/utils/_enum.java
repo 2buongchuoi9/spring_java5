@@ -38,4 +38,18 @@ public final class _enum {
     FIXED_AMOUNT, PERCENTAGE_AMOUNT
   }
 
+  public enum OrderStateEnum {
+    PENDING,
+    CONFIRMED,
+    SHIPPED,
+    CANCELLED,
+    DELIVERED,
+  }
+
+  public enum TypePayment {
+    CASH,
+    MOMO,
+    CARD_BANK,
+  }
+
 }

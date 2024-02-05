@@ -1,4 +1,4 @@
-package daden.shopaa.dto;
+package daden.shopaa.repository.repositoryUtils;
 
 import java.util.List;
 

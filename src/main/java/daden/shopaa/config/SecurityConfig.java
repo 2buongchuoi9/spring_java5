@@ -3,6 +3,7 @@ package daden.shopaa.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,6 +84,8 @@ public class SecurityConfig {
       FREE_REQUEST.AUTH + "/register",
       Constans.API_V1 + "/favicon.ico",
       Constans.API_V1 + "/oauth2",
+      "/api/v1/cart/add-to-cart",
+      "/api/v1/order/checkout-review",
       "/v2/api-docs",
       "/v3/api-docs",
       "/v3/api-docs/**",

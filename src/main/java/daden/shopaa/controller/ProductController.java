@@ -1,6 +1,6 @@
 package daden.shopaa.controller;
 
-import daden.shopaa.dto.PageCustom;
+import daden.shopaa.dto.model.MainResponse;
 import daden.shopaa.dto.parampetterRequest.ProductParamRequets;
 
 import org.springframework.data.domain.PageRequest;
@@ -11,11 +11,13 @@ import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
 
 import daden.shopaa.dto.req.ProductReq;
 import daden.shopaa.entity.Product;
+import daden.shopaa.repository.repositoryUtils.PageCustom;
 import daden.shopaa.services.ProductService;
 import daden.shopaa.utils.Constans;
 import daden.shopaa.utils.Constans.HASROLE;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -37,19 +39,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ProductController {
   private final ProductService productService;
 
-  // @Operation(summary = "asjhdkasj")
-  // @GetMapping("/")
-  // public ResponseEntity<?> findAllProduct(
-  // @PageableDefault(page = 0, size = 20) Pageable pageable,
-  // @RequestParam(required = false) String keySearch,
-  // @RequestParam(required = false) Double minPrice,
-  // @RequestParam(required = false) Double maxPrice,
-  // @RequestParam(required = false) Boolean status,
-
-  // @RequestBody ProductReq productReq) {
-  // return ResponseEntity.ok().body(null);
-  // }
-
   @Operation(summary = "add product")
   @PreAuthorize(HASROLE.ADMIN)
   @PostMapping("")
@@ -60,16 +49,17 @@ public class ProductController {
   @Operation(summary = "update product")
   @PreAuthorize(HASROLE.ADMIN)
   @PostMapping("/{id}")
-  public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody ProductReq productReq) {
+  public ResponseEntity<Product> updateProduct(@PathVariable String id, @Valid @RequestBody ProductReq productReq) {
     return ResponseEntity.ok().body(productService.add(productReq));
   }
 
   @Operation(summary = "find all")
   @GetMapping("")
-  public ResponseEntity<PageCustom<Product>> findAll(
+  public ResponseEntity<MainResponse<PageCustom<Product>>> findAll(
       @PageableDefault(size = 10, page = 0) Pageable pageable,
-      @ModelAttribute ProductParamRequets productParamRequets) {
-    return ResponseEntity.ok().body(productService.findAll(pageable, productParamRequets));
+      @Valid @ModelAttribute ProductParamRequets productParamRequets) {
+    return ResponseEntity.ok().body(
+        MainResponse.oke(productParamRequets.getMessage(), productService.findAll(pageable, productParamRequets)));
   }
 
 }

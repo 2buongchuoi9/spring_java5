@@ -9,5 +9,9 @@ import daden.shopaa.entity.Category;
 public interface CategoryRepo extends MongoRepository<Category, String> {
   boolean existsByTitle(String title);
 
+  boolean existsByTitleAndParentId(String title, String parentId);
+
+  boolean existsByParentId(String parentId);
+
   boolean existsByTitleAndIdNot(String title, String id);
 }

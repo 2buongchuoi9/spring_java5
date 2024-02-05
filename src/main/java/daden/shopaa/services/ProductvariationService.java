@@ -4,17 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import daden.shopaa.dto.req.ProductVariationReq;
 import daden.shopaa.entity.Product;
 import daden.shopaa.entity.ProductVariation;
+import daden.shopaa.exceptions.BabRequestError;
+import daden.shopaa.exceptions.NotFoundError;
 import daden.shopaa.repository.ProductVariationRepo;
+import lombok.RequiredArgsConstructor;
 
-@Service
+@Repository
+@RequiredArgsConstructor
+@SuppressWarnings("null")
 public class ProductvariationService {
-  @Autowired
-  private ProductVariationRepo variationRepo;
+  private final ProductVariationRepo variationRepo;
 
   public List<ProductVariation> addOrUpdateProductVariation(List<ProductVariationReq> variations, Product product) {
     List<ProductVariation> existingVariations = product.getVariations();
@@ -45,4 +50,17 @@ public class ProductvariationService {
     }
     return variationRepo.saveAll(existingVariations);
   }
+
+  public void updateQuantityProductVariation(Integer minusQuantity, String productVatiationId) {
+    ProductVariation foundVariation = variationRepo.findById(productVatiationId)
+        .orElseThrow(() -> new NotFoundError("productVatiationId", productVatiationId));
+
+    if (foundVariation.getQuantity() < minusQuantity)
+      throw new BabRequestError("quantity in inventory is " + foundVariation.getQuantity() + " but you set "
+          + minusQuantity + " at productVariationId: " + productVatiationId);
+
+    foundVariation.setQuantity(foundVariation.getQuantity() - minusQuantity);
+    variationRepo.save(foundVariation);
+  }
+
 }

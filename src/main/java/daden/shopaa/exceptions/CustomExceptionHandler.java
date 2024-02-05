@@ -1,39 +1,28 @@
 package daden.shopaa.exceptions;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AccountStatusException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import daden.shopaa.dto.MainResponse;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import daden.shopaa.dto.model.MainResponse;
 
 @RestControllerAdvice
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+
+@SuppressWarnings("rawtypes")
+public class CustomExceptionHandler {
 
   @ExceptionHandler(NotFoundError.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -62,52 +51,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   }
 
-  // Xử lý tất cả các exception chưa được khai báo
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<MainResponse> handlerException(Exception ex) {
-    MainResponse err = new MainResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-        ex.getMessage());
-
-    return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
-  // @ExceptionHandler(MethodArgumentNotValidException.class)
-  // @ResponseStatus(HttpStatus.BAD_REQUEST)
-  // ResponseEntity<ErrorResponse>
-  // handleValidationException(MethodArgumentNotValidException ex) {
-  // List<ObjectError> errors = ex.getBindingResult().getAllErrors();
-  // Map<String, String> map = new HashMap<>(errors.size());
-  // errors.forEach((error) -> {
-  // String key = ((FieldError) error).getField();
-  // String val = error.getDefaultMessage();
-  // map.put(key, val);
-  // });
-  // return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST,
-  // map.toString()), HttpStatus.BAD_REQUEST);
-  // }
-
-  // @ExceptionHandler(InsufficientAuthenticationException.class)
-  // @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  // ResponseEntity<ErrorResponse>
-  // handleInsufficientAuthenticationException(InsufficientAuthenticationException
-  // ex) {
-
-  // return new ResponseEntity<>(
-  // new ErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(),
-  // ex),
-  // HttpStatus.UNAUTHORIZED);
-  // }
-
-  // @ExceptionHandler(AccountStatusException.class)
-  // @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  // ResponseEntity<ErrorResponse>
-  // handleAccountStatusException(AccountStatusException ex) {
-  // return new ResponseEntity<>(
-  // new ErrorResponse(HttpStatus.UNAUTHORIZED, "User account is abnormal.",
-  // ex.getMessage()),
-  // HttpStatus.UNAUTHORIZED);
-  // }
-
+  @SuppressWarnings("unchecked")
   @ExceptionHandler(AccessDeniedException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
   ResponseEntity<MainResponse> handleAccessDeniedException(AccessDeniedException ex) {
@@ -116,14 +60,29 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus.FORBIDDEN);
   }
 
-  // @ExceptionHandler(NoHandlerFoundException.class)
-  // @ResponseStatus(HttpStatus.NOT_FOUND)
-  // ResponseEntity<ErrorResponse>
-  // handleNoHandlerFoundException(NoHandlerFoundException ex) {
-  // return new ResponseEntity<>(
-  // new ErrorResponse(HttpStatus.NOT_FOUND, "This API endpoint is not found.",
-  // ex.getMessage()),
-  // HttpStatus.UNAUTHORIZED);
-  // }
+  @SuppressWarnings("unchecked")
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  ResponseEntity<MainResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    List<ObjectError> errors = ex.getBindingResult().getAllErrors();
+    Map<String, String> map = new HashMap<>(errors.size());
+    errors.forEach((error) -> {
+      String key = ((FieldError) error).getField();
+      String val = error.getDefaultMessage();
+      map.put(key, val);
+    });
+    return new ResponseEntity<>(
+        new MainResponse(HttpStatus.BAD_REQUEST, "validate error", map),
+        HttpStatus.BAD_REQUEST);
+  }
+
+  // Xử lý tất cả các exception chưa được khai báo
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<MainResponse> handlerException(Exception ex) {
+    MainResponse err = new MainResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+        ex.getMessage());
+
+    return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
 }

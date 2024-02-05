@@ -12,6 +12,7 @@ public final class Constans {
         CATE = API_V1 + "/category";
     public static final String[] LIST = {
         "/favicon.ico",
+        "/api/v1/cart/add-to-cart",
         PRODUCTS,
         AUTH,
     };

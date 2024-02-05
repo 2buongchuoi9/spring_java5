@@ -1,4 +1,4 @@
-package daden.shopaa.dto;
+package daden.shopaa.dto.model;
 
 import org.springframework.http.HttpStatus;
 

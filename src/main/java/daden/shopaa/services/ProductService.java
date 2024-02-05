@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import daden.shopaa.dto.PageCustom;
 import daden.shopaa.dto.parampetterRequest.ProductParamRequets;
 import daden.shopaa.dto.req.ProductReq;
 import daden.shopaa.entity.Category;
@@ -22,6 +21,7 @@ import daden.shopaa.exceptions.DuplicateRecordError;
 import daden.shopaa.exceptions.NotFoundError;
 import daden.shopaa.repository.CategoryRepo;
 import daden.shopaa.repository.ProductRepo;
+import daden.shopaa.repository.repositoryUtils.PageCustom;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -69,14 +69,17 @@ public class ProductService {
     Query query = new Query();
 
     // keySearch
-    if (keySearch != null && !keySearch.isEmpty())
+    if (keySearch != null && !keySearch.isEmpty()) {
+      String regexPattern = "(?i)" + keySearch.trim(); // Thêm ?i để không phân biệt chữ hoa chữ thường
       query.addCriteria(new Criteria().orOperator(
-          Criteria.where("name").regex(keySearch.trim()),
-          Criteria.where("description").regex(keySearch.trim()),
+          Criteria.where("name").regex(regexPattern),
+          Criteria.where("description").regex(regexPattern),
           Criteria.where("categories").elemMatch(
-              Criteria.where("title").regex(keySearch.trim())),
+              Criteria.where("title").regex(regexPattern)),
           Criteria.where("categories").elemMatch(
-              Criteria.where("description").regex(keySearch.trim()))));
+              new Criteria().orOperator(Criteria.where("title").is(regexPattern),
+                  Criteria.where("description").is(regexPattern)))));
+    }
 
     if (minPrice != null)
       query.addCriteria(Criteria.where("price").gte(minPrice));
@@ -85,7 +88,8 @@ public class ProductService {
       query.addCriteria(Criteria.where("price").lte(maxPrice));
 
     if (categoryId != null)
-      query.addCriteria(Criteria.where("categories").elemMatch(Criteria.where("id").is(categoryId)));
+      query.addCriteria(Criteria.where("categories").elemMatch(
+          new Criteria().orOperator(Criteria.where("id").is(categoryId), Criteria.where("parentId").is(categoryId))));
 
     if (color != null)
       query.addCriteria(Criteria.where("variations.color").is(color));
