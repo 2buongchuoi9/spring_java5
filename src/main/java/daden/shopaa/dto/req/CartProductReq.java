@@ -10,7 +10,7 @@ public class CartProductReq {
   private Integer oldQuantity = 0;
 
   @AssertTrue(message = "quantity - oldQuantity must >= 0")
-  public boolean isValidateQuantity() {
+  boolean isValidateQuantity() {
     return quantity - oldQuantity >= 0;
   }
 }

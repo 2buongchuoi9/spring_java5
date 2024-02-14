@@ -18,7 +18,7 @@ public class ChangePasswordReq {
   private String passwordNewConfirm;
 
   @AssertTrue(message = "passwordNew and passwordNewConfirm is not true")
-  public boolean isValidatePassword() {
+  boolean isValidatePassword() {
     return passwordNew.equals(passwordNewConfirm);
   }
 }

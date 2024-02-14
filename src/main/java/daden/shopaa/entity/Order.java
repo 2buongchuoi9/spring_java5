@@ -34,7 +34,7 @@ public class Order {
   private String payment = TypePayment.CASH.name();
   @Default
   private String state = StateOrderEnum.PENDING.name();
-
+  private String note;
   @CreatedDate
   @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
   private LocalDateTime createDate;

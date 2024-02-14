@@ -1,6 +1,7 @@
 package daden.shopaa.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -23,7 +24,7 @@ public class Discount {
   private String name;
   private String code;
   @Default
-  private String type = TypeDiscount.PERCENTAGE_AMOUNT.name();
+  private String type = TypeDiscount.FIXED_AMOUNT.name();
   @Default
   private Double value = 0.0; // neu type=PERCENTAGE_AMOUNT thi tinh theo %(vidu: 34.5 => 34.5%)
   @Default
@@ -31,7 +32,8 @@ public class Discount {
   private Integer totalCount = 50;
   @Default
   private Double minOrderValue = null; // gia tri toi thieu de ap dung discount
-  private List<String> userUsedIds; // danh sach user da dung discount
+  @Default
+  private List<String> userUsedIds = new ArrayList<>(); // danh sach user da dung discount
   @Default
   private Integer countUserUseDiscount = 1; // so lan su dung cua moi user
   @Default
