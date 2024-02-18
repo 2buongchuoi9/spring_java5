@@ -1,5 +1,9 @@
 package daden.shopaa.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import daden.shopaa.dto.model.CheckoutModel;
 import daden.shopaa.dto.model.MainResponse;
 import daden.shopaa.dto.parampetterRequest.OrderParamRequest;
@@ -20,7 +26,11 @@ import daden.shopaa.dto.req.UpdateStateOrder;
 import daden.shopaa.entity.Order;
 import daden.shopaa.repository.repositoryUtils.PageCustom;
 import daden.shopaa.services.OrderService;
+import daden.shopaa.services.VnpayService;
 import daden.shopaa.utils.Constans.HASROLE;
+import daden.shopaa.utils._enum.TypePayment;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -30,6 +40,8 @@ import lombok.val;
 @RequestMapping("/api/v1/order")
 public class OrderController {
   private final OrderService orderService;
+  private final VnpayService vnpayService;
+  private final HttpServletRequest request;
 
   @PostMapping("/checkout-review")
   public ResponseEntity<MainResponse<CheckoutModel>> checkoutReview(@RequestBody @Valid CheckoutReq checkoutReq) {
@@ -37,8 +49,21 @@ public class OrderController {
   }
 
   @PostMapping("/order-user")
-  public ResponseEntity<MainResponse<Order>> orderByUser(@RequestBody @Valid CheckoutReq checkoutReq) {
-    return ResponseEntity.ok().body(MainResponse.oke(orderService.orderByUser(checkoutReq)));
+  public ResponseEntity<MainResponse<?>> orderByUser(@RequestBody @Valid CheckoutReq checkoutReq)
+      throws UnsupportedEncodingException, JsonProcessingException {
+
+    Order order = orderService.orderByUser(checkoutReq);
+
+    if (checkoutReq.getPayment().equals(TypePayment.CASH.name())) {
+      return ResponseEntity.ok().body(MainResponse.oke(order));
+    } else {
+      Map<String, String> result = new HashMap<>();
+      result.put("url", vnpayService.createPaymentUrl(request, order));
+      return ResponseEntity.ok().body(MainResponse.oke(result));
+    }
+
+    // return
+    // ResponseEntity.ok().body(MainResponse.oke(orderService.orderByUser(checkoutReq)));
   }
 
   @PostMapping("")

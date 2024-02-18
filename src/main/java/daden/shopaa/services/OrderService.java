@@ -20,6 +20,7 @@ import daden.shopaa.dto.req.CheckoutReq;
 import daden.shopaa.entity.Cart;
 import daden.shopaa.entity.Discount;
 import daden.shopaa.entity.Order;
+import daden.shopaa.entity.ProductVariation;
 import daden.shopaa.exceptions.BabRequestError;
 import daden.shopaa.exceptions.NotFoundError;
 import daden.shopaa.repository.CartRepo;
@@ -39,6 +40,7 @@ public class OrderService {
   private final MongoTemplate mongoTemplate;
   private final OrderRepo orderRepo;
   private final ProductvariationService variationService;
+  private final ProductVariationRepo variationRepo;
   private final CartService cartService;
   private final DiscountService discountService;
   private final UserRepo userRepo;
@@ -90,7 +92,8 @@ public class OrderService {
   @Transactional(rollbackFor = Exception.class)
   public Order orderByUser(CheckoutReq checkoutReq) {
     CheckoutModel checkout = checkoutReview(checkoutReq);
-    String discountId = checkoutReq.getDiscountId();
+
+    String discountId = checkout.getDiscountId();
 
     try {
       // save order
@@ -103,6 +106,7 @@ public class OrderService {
               .totalDiscount(checkout.getTotalDiscount())
               .totalCheckout(checkout.getTotalCheckout())
               .items(checkout.getItems_checkout())
+              .payment(checkout.getPayment())
               .state(StateOrderEnum.PENDING.name())
               .build());
 
@@ -201,6 +205,21 @@ public class OrderService {
   public Order findOrderById(String orderId) {
     Order order = orderRepo.findById(orderId).orElseThrow(() -> new NotFoundError("orderId", orderId));
     return order;
+  }
+
+  public void removeOrderAndReturnProductQuantityBecausePaymentFail(String orderId) {
+    Order order = orderRepo.findById(orderId).orElse(null);
+    if (order != null) {
+      // return quantity product
+      order.getItems().stream().map(v -> {
+        ProductVariation variation = variationRepo.findById(v.getProductVariationId()).get();
+        variation.setQuantity(variation.getQuantity() + v.getQuantity());
+        variationRepo.save(variation);
+        return v;
+      });
+      // remove order
+      orderRepo.delete(order);
+    }
   }
 
 }
