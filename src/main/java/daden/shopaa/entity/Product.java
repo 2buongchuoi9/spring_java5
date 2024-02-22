@@ -21,6 +21,8 @@ public class Product {
   private String id;
   private String name;
   private String slug;
+  private String image;
+  private List<String> images;
   private Double price;
   @Default
   private Double discount = 0.0;

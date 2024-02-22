@@ -12,7 +12,7 @@ public class CheckoutModel {
   private String cartId;
   private String address;
   private String discountId;
-  private List<CartModel> items_checkout;
+  private List<CartModel> items;
   private String payment;
   private Double totalOrder;
   private Double totaShip;

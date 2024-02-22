@@ -22,7 +22,7 @@ public class ProductParamRequets {
   private String status = StatusProductEnum.PUBLISHED.name();
 
   @AssertTrue(message = "minPrice must be less than or equal to maxPrice")
-  public boolean isMinMaxValid() {
+  boolean isMinMaxValid() {
     if (minPrice != null && maxPrice != null)
       return minPrice <= maxPrice;
     return true;

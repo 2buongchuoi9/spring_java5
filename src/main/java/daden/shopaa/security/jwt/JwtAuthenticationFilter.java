@@ -54,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FREE_REQUEST.AUTH + "/register",
       FREE_REQUEST.AUTH + "/refresh-token",
       Constans.API_V1 + "/oauth2",
+      "/api/v1/auth/conver-mod-to-user/",
       "/api/v1/category/**",
       "/api/v1/cart/add-to-cart",
       "/api/v1/order/checkout-review",

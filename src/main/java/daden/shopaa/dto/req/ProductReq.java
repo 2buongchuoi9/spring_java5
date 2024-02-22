@@ -11,6 +11,8 @@ import lombok.Data;
 @Builder
 public class ProductReq {
   private String name;
+  private String image;
+  private List<String> images;
   private String description;
   private Double price;
   @Default

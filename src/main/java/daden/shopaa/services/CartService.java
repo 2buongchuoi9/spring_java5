@@ -1,5 +1,6 @@
 package daden.shopaa.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import daden.shopaa.dto.req.CartProductReq;
 import daden.shopaa.dto.req.CartReq;
 import daden.shopaa.entity.Cart;
 import daden.shopaa.entity.ProductVariation;
+import daden.shopaa.entity.User;
 import daden.shopaa.exceptions.BabRequestError;
 import daden.shopaa.exceptions.NotFoundError;
 import daden.shopaa.repository.CartRepo;
@@ -54,8 +56,14 @@ public class CartService {
   }
 
   public Cart findCartByUserId(String userId) {
-    return cartRepo.findByUserIdAndState(userId, StateCartEnum.ACTIVE.name())
-        .orElseThrow(() -> new NotFoundError("userId", userId));
+    userRepo.findById(userId).orElseThrow(() -> new NotFoundError("userId", userId));
+
+    Cart cart = cartRepo.findByUserIdAndState(userId, StateCartEnum.ACTIVE.name())
+        .orElse(Cart.builder()
+            .userId(userId)
+            .items(new ArrayList<>())
+            .build());
+    return cartRepo.save(cart);
   }
 
   public List<CartModel> checkoutProductServer(List<CartProductReq> items) {

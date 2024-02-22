@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,17 @@ public class DiscountService {
     return result;
   }
 
+  public List<Discount> getDiscountsByUser() {
+    Query query = new Query();
+
+    query.addCriteria(
+        Criteria.where("status").is(true)
+            .and("dateEnd").gt(LocalDateTime.now())
+            .and("totalCount").gt(0));
+
+    return mongoTemplate.find(query, Discount.class);
+  }
+
   public Discount createDiscount(CreateDiscountReq discountReq) {
     if (discountRepo.existsByCode(discountReq.getCode()))
       throw new DuplicateRecordError("code", discountReq.getCode());
@@ -115,6 +127,10 @@ public class DiscountService {
       foundDiscount.setUserUsedIds(userUsedIds);
     }
     discountRepo.save(foundDiscount);
+  }
+
+  public Discount findDiscountById(String id) {
+    return discountRepo.findById(id).orElseThrow(() -> new NotFoundError("id", id));
   }
 
 }

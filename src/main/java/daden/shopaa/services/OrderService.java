@@ -80,10 +80,10 @@ public class OrderService {
         .cartId(cartId)
         .address(checkoutReq.getAddress())
         .discountId(discountId)
-        .items_checkout(listItems)
+        .items(listItems)
         .totalOrder(totalOrder)
         .totalDiscount(resultDiscount[0])
-        .totaShip(totalShip) // randome 5000 -> 20000
+        .totaShip(checkoutReq.getAddress() == null ? 0 : totalShip) // randome 5000 -> 20000
         .totalCheckout(resultDiscount[1] + totalShip)
         .payment(checkoutReq.getPayment())
         .build();
@@ -105,7 +105,7 @@ public class OrderService {
               .totalShipping(checkout.getTotaShip())
               .totalDiscount(checkout.getTotalDiscount())
               .totalCheckout(checkout.getTotalCheckout())
-              .items(checkout.getItems_checkout())
+              .items(checkout.getItems())
               .payment(checkout.getPayment())
               .state(StateOrderEnum.PENDING.name())
               .build());

@@ -1,5 +1,6 @@
 package daden.shopaa.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import daden.shopaa.exceptions.DuplicateRecordError;
 import daden.shopaa.exceptions.NotFoundError;
 import daden.shopaa.repository.CategoryRepo;
 import daden.shopaa.repository.ProductRepo;
+import daden.shopaa.repository.ProductVariationRepo;
 import daden.shopaa.repository.repositoryUtils.PageCustom;
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
   private final MongoTemplate mongoTemplate;
   private final ProductRepo productRepo;
+  private final ProductVariationRepo variationRepo;
   private final ProductvariationService variationService;
   private final CategoryRepo categoryRepo;
 
@@ -42,9 +45,15 @@ public class ProductService {
         .map(v -> categoryRepo.findById(v).orElseThrow(() -> new NotFoundError("category id", v)))
         .toList();
 
+    List<String> images = new ArrayList<>();
+    if (productReq.getImages() != null && productReq.getImage().length() > 0)
+      images = productReq.getImages().stream().filter(v -> v != null && !v.isEmpty()).collect(Collectors.toList());
+
     Product product = productRepo.save(
         Product.builder()
             .name(productReq.getName())
+            .image(productReq.getImage())
+            .images(images)
             .description(productReq.getDescription())
             .categories(cates)
             .price(productReq.getPrice())
@@ -55,6 +64,10 @@ public class ProductService {
 
     product.setVariations(variations);
     return productRepo.save(product);
+  }
+
+  public Product findById(String id) {
+    return productRepo.findById(id).orElseThrow(() -> new NotFoundError("id", id));
   }
 
   public PageCustom<Product> findAll(Pageable pageable, ProductParamRequets paramRequets) {
@@ -81,11 +94,29 @@ public class ProductService {
                   Criteria.where("description").is(regexPattern)))));
     }
 
-    if (minPrice != null)
-      query.addCriteria(Criteria.where("price").gte(minPrice));
+    if (minPrice != null && maxPrice != null)
+      query.addCriteria(Criteria.where("price").gte(minPrice * 1000).lte(maxPrice * 1000));
+    else if (minPrice != null)
+      query.addCriteria(Criteria.where("price").gte(minPrice * 1000));
+    else if (maxPrice != null)
+      query.addCriteria(Criteria.where("price").lte(maxPrice * 1000));
 
-    if (maxPrice != null)
-      query.addCriteria(Criteria.where("price").lte(maxPrice));
+    // if (minPrice != null)
+    // query.addCriteria(Criteria.where("price").gte(minPrice));
+
+    // if (maxPrice != null)
+    // query.addCriteria(Criteria.where("price").lte(maxPrice));
+
+    // if (minPrice != null || maxPrice != null) {
+    // Criteria priceCriteria = new Criteria();
+    // if (minPrice != null) {
+    // priceCriteria = priceCriteria.gte(minPrice);
+    // }
+    // if (maxPrice != null) {
+    // priceCriteria = priceCriteria.lte(maxPrice);
+    // }
+    // query.addCriteria(priceCriteria);
+    // }
 
     if (categoryId != null)
       query.addCriteria(Criteria.where("categories").elemMatch(
@@ -100,10 +131,12 @@ public class ProductService {
     if (status != null)
       query.addCriteria(Criteria.where("status").is(status));
 
+    long total = mongoTemplate.count(query, Product.class);
     query.with(pageable);
 
     List<Product> list = mongoTemplate.find(query, Product.class);
-    long total = mongoTemplate.count(query, Product.class);
+    list.stream().forEach(v -> System.out.println(v));
+    // System.out.println(list.get(0).getImage());
     return new PageCustom<>(PageableExecutionUtils.getPage(list, pageable, () -> total));
   }
 
@@ -116,18 +149,32 @@ public class ProductService {
         .map(v -> categoryRepo.findById(v).orElseThrow(() -> new NotFoundError("category id", v)))
         .toList();
 
-    List<ProductVariation> variations = variationService.addOrUpdateProductVariation(productReq.getVariations(),
-        foundProduct);
+    List<String> images = new ArrayList<>();
+    if (productReq.getImages() != null && productReq.getImage().length() > 0)
+      images = productReq.getImages().stream().filter(v -> v != null && !v.isEmpty()).collect(Collectors.toList());
+
+    // List<ProductVariation> variations =
+    // variationService.addOrUpdateProductVariation(productReq.getVariations(),
+    // foundProduct);
 
     foundProduct.setCategories(cates);
+    foundProduct.setImage(productReq.getImage());
+    foundProduct.setImages(images);
     foundProduct.setName(productReq.getName());
     foundProduct.setDescription(productReq.getDescription());
     foundProduct.setDiscount(productReq.getDiscount());
     foundProduct.setPrice(productReq.getPrice());
     foundProduct.setStatus(productReq.getStatus());
-    foundProduct.setVariations(variations);
+    // foundProduct.setVariations(variations);
 
     return productRepo.save(foundProduct);
+  }
+
+  public Product findProductByVariation(String variationId) {
+    ProductVariation variation = variationRepo.findById(variationId)
+        .orElseThrow(() -> new NotFoundError("id", variationId));
+
+    return productRepo.findById(variation.getProductId()).orElseThrow(() -> new NotFoundError("id", variationId));
   }
 
 }

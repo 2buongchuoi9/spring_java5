@@ -42,8 +42,8 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<MainResponse<User>> register(@RequestBody RegisterReq registerReq) {
-    return ResponseEntity.ok().body(MainResponse.oke(shopService.registerLocal(registerReq)));
+  public ResponseEntity<MainResponse<LoginRes>> register(@RequestBody RegisterReq registerReq) {
+    return ResponseEntity.ok().body(MainResponse.oke(shopService.registerLocalv2(registerReq)));
   }
 
   @PostMapping("/refresh-token")
@@ -60,14 +60,14 @@ public class AuthController {
   }
 
   @PostMapping("/conver-mod-to-user/{id}")
-  public ResponseEntity<MainResponse<User>> convserModToUser(
+  public ResponseEntity<MainResponse<LoginRes>> convserModToUser(
       HttpServletRequest req,
       @PathVariable String id,
       @RequestBody @Valid RegisterReq registerReq) {
     String ipAddress = req.getHeader("X-Forwarded-For");
     if (ipAddress == null)
       ipAddress = req.getRemoteAddr();
-    return ResponseEntity.ok().body(MainResponse.oke(shopService.converModToUser(id, registerReq)));
+    return ResponseEntity.ok().body(MainResponse.oke(shopService.converModToUserv2(id, registerReq)));
   }
 
 }

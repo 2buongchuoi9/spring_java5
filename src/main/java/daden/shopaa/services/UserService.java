@@ -59,7 +59,7 @@ public class UserService {
   public LoginRes loginLocal(LoginReq loginReq) {
     // check email password
     User foundShop = userRepo.findByEmail(loginReq.getEmail())
-        .orElseThrow(() -> new NotFoundError("shop is not registered"));
+        .orElseThrow(() -> new NotFoundError("user is not registered"));
 
     if (!passwordEncoder.matches(loginReq.getPassword(), foundShop.getPassword()))
       throw new BabRequestError("password is not true");
@@ -81,13 +81,39 @@ public class UserService {
   public User registerLocal(RegisterReq registerReq) {
     // check email
     if (userRepo.existsByEmail(registerReq.getEmail()))
-      throw new BabRequestError("shop is registered");
+      throw new BabRequestError("user is registered");
 
     return userRepo.save(User.builder()
         .name(registerReq.getName())
         .email(registerReq.getEmail())
         .password(passwordEncoder.encode(registerReq.getPassword()))
         .build());
+  }
+
+  public LoginRes registerLocalv2(RegisterReq registerReq) {
+    // check email
+    if (userRepo.existsByEmail(registerReq.getEmail()))
+      throw new BabRequestError("user is registered");
+
+    User user = userRepo.save(User.builder()
+        .name(registerReq.getName())
+        .email(registerReq.getEmail())
+        .password(passwordEncoder.encode(registerReq.getPassword()))
+        .build());
+
+    KeyPair keys = JwtService.generatorKeyPair();
+
+    TokenStore tokens = new TokenStore(jwtService.createAccessToken(user.getEmail(), keys.getPrivate()),
+        jwtService.createRefreshToken(user.getEmail(), keys.getPrivate()));
+
+    if (!keyTokenService.createKeyStore(
+        user.getId(),
+        jwtService.getStringFromPublicKey(keys.getPublic()),
+        tokens.getRefreshToken()))
+      throw new RuntimeException("fail to create keyStore");
+
+    return new LoginRes(tokens, user);
+
   }
 
   public User createUserMod(String ipAddress) {
@@ -103,7 +129,7 @@ public class UserService {
 
   public User converModToUser(String userModId, RegisterReq registerReq) {
     if (userRepo.existsByEmail(registerReq.getEmail()))
-      throw new BabRequestError("shop is registered");
+      throw new BabRequestError("user is registered");
 
     User foundUser = userRepo.findByIdAndRolesIn(userModId, Set.of(RoleShopEnum.MOD))
         .orElseThrow(() -> new NotFoundError("userModId", userModId));
@@ -117,6 +143,38 @@ public class UserService {
     foundUser.setRoles(Set.of(RoleShopEnum.USER));
 
     return userRepo.save(foundUser);
+
+  }
+
+  public LoginRes converModToUserv2(String userModId, RegisterReq registerReq) {
+    if (userRepo.existsByEmail(registerReq.getEmail()))
+      throw new BabRequestError("user is registered");
+
+    User foundUser = userRepo.findByIdAndRolesIn(userModId, Set.of(RoleShopEnum.MOD))
+        .orElseThrow(() -> new NotFoundError("userModId", userModId));
+
+    // if (!foundUser.getEmail().equals(ipAddress + AFTER_EMAIL))
+    // throw new BabRequestError("pls used computer or phone with conver user");
+
+    foundUser.setEmail(registerReq.getEmail());
+    foundUser.setName(registerReq.getName());
+    foundUser.setPassword(passwordEncoder.encode(registerReq.getPassword()));
+    foundUser.setRoles(Set.of(RoleShopEnum.USER));
+
+    foundUser = userRepo.save(foundUser);
+
+    KeyPair keys = JwtService.generatorKeyPair();
+
+    TokenStore tokens = new TokenStore(jwtService.createAccessToken(foundUser.getEmail(), keys.getPrivate()),
+        jwtService.createRefreshToken(foundUser.getEmail(), keys.getPrivate()));
+
+    if (!keyTokenService.createKeyStore(
+        foundUser.getId(),
+        jwtService.getStringFromPublicKey(keys.getPublic()),
+        tokens.getRefreshToken()))
+      throw new RuntimeException("fail to create keyStore");
+
+    return new LoginRes(tokens, foundUser);
 
   }
 

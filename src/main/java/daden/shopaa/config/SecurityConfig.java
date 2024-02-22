@@ -78,6 +78,7 @@ public class SecurityConfig {
   final HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository;
 
   private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**",
+      "/api/v1/auth/conver-mod-to-user",
       "/login",
       Constans.API_V1 + "/cc",
       FREE_REQUEST.AUTH + "/login",

@@ -50,7 +50,7 @@ public class ProductController {
   @PreAuthorize(HASROLE.ADMIN)
   @PostMapping("/{id}")
   public ResponseEntity<Product> updateProduct(@PathVariable String id, @Valid @RequestBody ProductReq productReq) {
-    return ResponseEntity.ok().body(productService.add(productReq));
+    return ResponseEntity.ok().body(productService.updateProduct(productReq, id));
   }
 
   @Operation(summary = "find all")
@@ -58,8 +58,23 @@ public class ProductController {
   public ResponseEntity<MainResponse<PageCustom<Product>>> findAll(
       @PageableDefault(size = 10, page = 0) Pageable pageable,
       @Valid @ModelAttribute ProductParamRequets productParamRequets) {
+    System.out.println("page11111" + pageable.toString());
     return ResponseEntity.ok().body(
         MainResponse.oke(productParamRequets.getMessage(), productService.findAll(pageable, productParamRequets)));
+  }
+
+  @Operation(summary = "find one")
+  @GetMapping("/{id}")
+  public ResponseEntity<MainResponse<Product>> findOne(@PathVariable String id) {
+    return ResponseEntity.ok().body(
+        MainResponse.oke(productService.findById(id)));
+  }
+
+  @Operation(summary = "find one")
+  @GetMapping("/variation/{id}")
+  public ResponseEntity<MainResponse<Product>> findByVariation(@PathVariable String id) {
+    return ResponseEntity.ok().body(
+        MainResponse.oke(productService.findProductByVariation(id)));
   }
 
 }

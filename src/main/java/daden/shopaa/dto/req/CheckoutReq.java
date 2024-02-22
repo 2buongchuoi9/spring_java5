@@ -16,7 +16,7 @@ public class CheckoutReq {
   private String cartId;
   @NotEmpty(message = "userId not null")
   private String userId;
-  @NotEmpty(message = "address not null")
+  // @NotEmpty(message = "address not null")
   private String address;
   @Default
   private String payment = TypePayment.CASH.name();
