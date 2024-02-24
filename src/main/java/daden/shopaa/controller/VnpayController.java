@@ -3,6 +3,8 @@ package daden.shopaa.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -124,9 +126,9 @@ public class VnpayController {
   }
 
   @GetMapping("/payment-info")
-  public ResponseEntity<MainResponse<?>> transaction(
+  public Object transaction(
       @RequestParam(value = "vnp_TransactionStatus") String cc,
-      @RequestParam(value = "vnp_OrderInfo") String orderId) throws JsonMappingException, JsonProcessingException {
+      @RequestParam(value = "vnp_OrderInfo") String urlRedirect) throws JsonMappingException, JsonProcessingException {
 
     // check status payment
     String mes = VnpayConfig.getMessageIPN().keySet().stream()
@@ -138,13 +140,22 @@ public class VnpayController {
         .filter(v -> !v.equals(""))
         .collect(Collectors.joining(" "));
 
+    String[] parts = urlRedirect.split("\\?orderId=");
+
     // giao dich that bai xoa order va tra lai du lieu cua product & discount
     if (cc.equals("00") && cc.equals("07")) {
-      orderService.removeOrderAndReturnProductQuantityBecausePaymentFail(orderId);
+      orderService.removeOrderAndReturnProductQuantityBecausePaymentFail(parts[1]);
       return ResponseEntity.ok().body(new MainResponse<>(HttpStatus.PAYMENT_REQUIRED, mes));
     }
 
-    return ResponseEntity.ok().body(MainResponse.oke(mes, orderService.findOrderById(orderId)));
+    // return ResponseEntity.ok().body(MainResponse.oke(mes,
+    // orderService.findOrderById(orderId)));
+
+    UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(parts[0])
+        .queryParam("orderId", parts[1])
+        .queryParam("message", mes);
+
+    return new RedirectView(builder.toUriString());
   }
 
 }

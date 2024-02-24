@@ -135,7 +135,10 @@ public class ProductService {
     query.with(pageable);
 
     List<Product> list = mongoTemplate.find(query, Product.class);
-    list.stream().forEach(v -> System.out.println(v));
+    // list.stream().forEach(v -> {
+    // ProductVariation va = v.getVariations().get(0);
+    // variationRepo.save(va);
+    // });
     // System.out.println(list.get(0).getImage());
     return new PageCustom<>(PageableExecutionUtils.getPage(list, pageable, () -> total));
   }

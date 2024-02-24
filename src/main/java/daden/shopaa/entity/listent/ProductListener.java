@@ -6,6 +6,7 @@ import daden.shopaa.entity.ProductVariation;
 
 import org.springframework.data.mongodb.core.mapping.event.BeforeSaveEvent;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
+import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +17,7 @@ public class ProductListener extends AbstractMongoEventListener<Product> {
     super.onBeforeSave(event);
     Product product = event.getSource();
     addSlugIfNotPresent(product);
-    updateProductQuantity(product);
+    // updateProductQuantity(product);
   }
 
   private void updateProductQuantity(Product product) {
@@ -32,4 +33,5 @@ public class ProductListener extends AbstractMongoEventListener<Product> {
       product.setSlug(generatedSlug);
     }
   }
+
 }

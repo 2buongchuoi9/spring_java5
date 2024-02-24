@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class VnpayService {
   private final OrderService orderService;
 
-  public String createPaymentUrl(HttpServletRequest req, Order order)
+  public String createPaymentUrl(HttpServletRequest req, Order order, String urlClient)
       throws UnsupportedEncodingException, JsonProcessingException {
 
     // String ckeckoutString = new ObjectMapper().writeValueAsString(checkout);
@@ -65,7 +65,7 @@ public class VnpayService {
 
     vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
 
-    vnp_Params.put("vnp_OrderInfo", order.getId());
+    vnp_Params.put("vnp_OrderInfo", urlClient + "?orderId=" + order.getId());
     System.out.println(vnp_Params.get("vnp_OrderInfo"));
 
     vnp_Params.put("vnp_OrderType", orderType);

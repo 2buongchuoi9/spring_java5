@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,16 +50,17 @@ public class OrderController {
   }
 
   @PostMapping("/order-user")
-  public ResponseEntity<MainResponse<?>> orderByUser(@RequestBody @Valid CheckoutReq checkoutReq)
+  public ResponseEntity<MainResponse<?>> orderByUser(@RequestBody @Valid CheckoutReq checkoutReq,
+      @RequestParam(defaultValue = "") String urlRedirect)
       throws UnsupportedEncodingException, JsonProcessingException {
 
     Order order = orderService.orderByUser(checkoutReq);
-
+    System.out.println("::::::::::::::::::::::::::::::::::::::::::" + checkoutReq.getPayment());
     if (checkoutReq.getPayment().equals(TypePayment.CASH.name())) {
       return ResponseEntity.ok().body(MainResponse.oke(order));
     } else {
       Map<String, String> result = new HashMap<>();
-      result.put("url", vnpayService.createPaymentUrl(request, order));
+      result.put("url", vnpayService.createPaymentUrl(request, order, urlRedirect));
       return ResponseEntity.ok().body(MainResponse.oke(result));
     }
 
@@ -75,7 +77,7 @@ public class OrderController {
   }
 
   @PostMapping("/{id}")
-  @PreAuthorize(HASROLE.ADMIN)
+  // @PreAuthorize(HASROLE.ADMIN)
   public ResponseEntity<MainResponse<Order>> getOrderById(@PathVariable String id) {
     return ResponseEntity.ok().body(MainResponse.oke(orderService.findOrderById(id)));
   }
