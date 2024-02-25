@@ -1,6 +1,7 @@
 package daden.shopaa.services;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -107,6 +108,7 @@ public class OrderService {
               .totalCheckout(checkout.getTotalCheckout())
               .items(checkout.getItems())
               .payment(checkout.getPayment())
+              .createDate(LocalDateTime.now())
               .state(StateOrderEnum.PENDING.name())
               .build());
 
@@ -140,6 +142,12 @@ public class OrderService {
   }
 
   public PageCustom<Order> findAllOrder(Pageable pageable, OrderParamRequest paramRequest) {
+    System.out.println("pageable" + pageable);
+    System.out.println("dateee" + paramRequest.getStartDate());
+
+    LocalDateTime startDate = paramRequest.getStartDate();
+    LocalDateTime endDate = paramRequest.getEndDate();
+
     String keySearch = paramRequest.getKeySearch();
     String state = paramRequest.getState();
     String payment = paramRequest.getPayment();
@@ -173,32 +181,29 @@ public class OrderService {
     if (payment != null && !payment.isEmpty())
       query.addCriteria(Criteria.where("payment").is(payment));
 
+    // date
+    if (startDate != null && endDate != null)
+      query.addCriteria(Criteria.where("createDate").gte(startDate).lte(endDate));
+    else if (startDate != null)
+      query.addCriteria(Criteria.where("createDate").gte(startDate));
+    else if (endDate != null)
+      query.addCriteria(Criteria.where("createDate").lte(endDate));
+
     // order
-    if (minOrder != null)
-      query.addCriteria(Criteria.where("totalOrder").gte(minOrder));
-    if (maxOrder != null)
-      query.addCriteria(Criteria.where("totalOrder").lte(maxOrder));
+    getBewtten(query, "price", minOrder, maxOrder);
 
     // checkout
-    if (minCheckout != null)
-      query.addCriteria(Criteria.where("totalCheckout").gte(minCheckout));
-    if (maxCheckout != null)
-      query.addCriteria(Criteria.where("totalCheckout").lte(maxCheckout));
+    getBewtten(query, "price", minCheckout, maxCheckout);
 
     // shopping
-    if (minShopping != null)
-      query.addCriteria(Criteria.where("totalShipping").gte(minShopping));
-    if (maxShopping != null)
-      query.addCriteria(Criteria.where("totalShipping").lte(maxShopping));
+    getBewtten(query, "price", minShopping, maxShopping);
 
     // discount
-    if (minDiscount != null)
-      query.addCriteria(Criteria.where("totalDiscount").gte(minDiscount));
-    if (maxDiscount != null)
-      query.addCriteria(Criteria.where("totalDiscount").lte(maxDiscount));
+    getBewtten(query, "price", minDiscount, maxDiscount);
 
-    List<Order> list = mongoTemplate.find(query, Order.class);
     long total = mongoTemplate.count(query, Order.class);
+    query.with(pageable);
+    List<Order> list = mongoTemplate.find(query, Order.class);
     return new PageCustom<>(PageableExecutionUtils.getPage(list, pageable, () -> total));
   }
 
@@ -220,6 +225,25 @@ public class OrderService {
       // remove order
       orderRepo.delete(order);
     }
+  }
+
+  public List<Order> findOrdersByUserId(String id, String state) {
+    Query query = new Query();
+    query.addCriteria(Criteria.where("userId").is(id));
+    if (state != null)
+      query.addCriteria(Criteria.where("state").is(state));
+
+    return mongoTemplate.find(query, Order.class);
+  }
+
+  // support get bewtten value double price
+  private void getBewtten(Query query, String name, Double minValue, Double maxValue) {
+    if (minValue != null && maxValue != null)
+      query.addCriteria(Criteria.where(name).gte(minValue * 1000).lte(maxValue * 1000));
+    else if (minValue != null)
+      query.addCriteria(Criteria.where(name).gte(minValue * 1000));
+    else if (maxValue != null)
+      query.addCriteria(Criteria.where(name).lte(maxValue * 1000));
   }
 
 }

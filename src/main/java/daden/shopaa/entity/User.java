@@ -12,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import daden.shopaa.config.WebMvcConfig;
 import daden.shopaa.utils._enum.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +54,7 @@ public class User {
   private String oAuth2Id = null;
 
   @CreatedDate
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+  @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
+  @DateTimeFormat
   private LocalDateTime dateCreate;
 }

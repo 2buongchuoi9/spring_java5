@@ -2,7 +2,9 @@ package daden.shopaa.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -98,5 +100,13 @@ public class OrderController {
       @RequestBody @Valid UpdateStateOrder updateStateOrder) {
     return ResponseEntity.ok().body(MainResponse
         .oke(orderService.cancelOrderByUser(updateStateOrder.getState(), updateStateOrder.getNote())));
+  }
+
+  @PostMapping("/userId/{id}")
+  @PreAuthorize(HASROLE.USER + " or " + HASROLE.ADMIN)
+  public ResponseEntity<MainResponse<List<Order>>> findByUserId(
+      @PathVariable String id, @RequestParam(required = false) String state) {
+    return ResponseEntity.ok().body(MainResponse
+        .oke(orderService.findOrdersByUserId(id, state)));
   }
 }

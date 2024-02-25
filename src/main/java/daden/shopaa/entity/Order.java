@@ -6,10 +6,14 @@ import java.util.List;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import daden.shopaa.config.WebMvcConfig;
 import daden.shopaa.dto.model.CartModel;
 import daden.shopaa.utils._enum.StateOrderEnum;
 import daden.shopaa.utils._enum.TypePayment;
@@ -35,11 +39,10 @@ public class Order {
   @Default
   private String state = StateOrderEnum.PENDING.name();
   private String note;
-  @CreatedDate
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+  @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
   private LocalDateTime createDate;
+  @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
   @LastModifiedDate
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
   private LocalDateTime updateDate;
 
 }

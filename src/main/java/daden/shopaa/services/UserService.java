@@ -276,4 +276,8 @@ public class UserService {
     return true;
   }
 
+  public User findUserById(String id) {
+    return userRepo.findById(id).orElseThrow(() -> new NotFoundError("id", id));
+  }
+
 }

@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,14 @@ public class UserController {
 
     return ResponseEntity.ok()
         .body(MainResponse.oke(userParamRequest.getMessage(), userService.findAll(pageable, userParamRequest)));
+  }
+
+  @Operation(summary = "get user by id")
+  @PostMapping("/{id}")
+  @PreAuthorize(HASROLE.ADMIN)
+  public ResponseEntity<MainResponse<User>> getOne(@PathVariable String id) {
+    return ResponseEntity.ok()
+        .body(MainResponse.oke(userService.findUserById(id)));
   }
 
   @Operation(summary = "handle change password")

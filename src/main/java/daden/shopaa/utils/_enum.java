@@ -25,7 +25,7 @@ public final class _enum {
   public enum StateOrderEnum {
     PENDING,
     CONFIRMED,
-    SHIPPED,
+    SHIPPING,
     CANCELLED,
     DELIVERED,
   }

@@ -7,9 +7,11 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import daden.shopaa.config.WebMvcConfig;
 import daden.shopaa.utils._enum.TypeDiscount;
 import lombok.Builder;
 import lombok.Data;
@@ -38,8 +40,10 @@ public class Discount {
   private Integer countUserUseDiscount = 1; // so lan su dung cua moi user
   @Default
   private Boolean status = true;
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+  @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
+  @DateTimeFormat
   private LocalDateTime dateStart;
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+  @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
+  @DateTimeFormat
   private LocalDateTime dateEnd;
 }

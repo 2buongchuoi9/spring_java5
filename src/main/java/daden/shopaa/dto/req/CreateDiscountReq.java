@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
+import daden.shopaa.config.WebMvcConfig;
 import daden.shopaa.utils._enum.TypeDiscount;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotEmpty;
@@ -31,13 +32,11 @@ public class CreateDiscountReq {
   private Double minOrderValue;
   private Integer countUserUseDiscount;
 
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+  @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
   @DateTimeFormat
-  @NotEmpty
   private LocalDateTime dateStart;
-  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+  @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
   @DateTimeFormat
-  @NotEmpty
   private LocalDateTime dateEnd;
 
   @AssertTrue(message = "start date must befor end date")
