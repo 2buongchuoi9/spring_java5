@@ -54,6 +54,7 @@ public class ProductService {
             .name(productReq.getName())
             .image(productReq.getImage())
             .images(images)
+            .priceImport(productReq.getPriceImport())
             .description(productReq.getDescription())
             .categories(cates)
             .price(productReq.getPrice())
@@ -165,7 +166,7 @@ public class ProductService {
     foundProduct.setImages(images);
     foundProduct.setName(productReq.getName());
     foundProduct.setDescription(productReq.getDescription());
-    foundProduct.setDiscount(productReq.getDiscount());
+    // foundProduct.setDiscount(productReq.getDiscount());
     foundProduct.setPrice(productReq.getPrice());
     foundProduct.setStatus(productReq.getStatus());
     // foundProduct.setVariations(variations);

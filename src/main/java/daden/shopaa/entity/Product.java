@@ -24,8 +24,7 @@ public class Product {
   private String image;
   private List<String> images;
   private Double price;
-  @Default
-  private Double discount = 0.0;
+  private Double priceImport;
   @Default
   private Integer quantity = 0;
   private String description;

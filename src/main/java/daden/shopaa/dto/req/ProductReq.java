@@ -3,6 +3,8 @@ package daden.shopaa.dto.req;
 import java.util.List;
 
 import daden.shopaa.utils._enum.StatusProductEnum;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder.Default;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +17,9 @@ public class ProductReq {
   private List<String> images;
   private String description;
   private Double price;
-  @Default
-  private Double discount = 0.0;
+  @NotNull
+  @NotEmpty
+  private Double priceImport;
   private List<String> categoryIds;
   private List<ProductVariationReq> variations;
   @Default
