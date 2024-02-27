@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class CartModel {
   private String productVariationId;
+  private String productId;
   private Integer quantity;
   private Double price;
 }

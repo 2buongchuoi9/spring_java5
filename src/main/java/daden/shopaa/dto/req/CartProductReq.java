@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class CartProductReq {
   private String productVariationId;
+  private String productId;
   private Integer quantity;
   private Integer oldQuantity = 0;
 

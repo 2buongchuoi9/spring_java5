@@ -11,6 +11,7 @@ import daden.shopaa.dto.model.CartModel;
 import daden.shopaa.dto.req.CartProductReq;
 import daden.shopaa.dto.req.CartReq;
 import daden.shopaa.entity.Cart;
+import daden.shopaa.entity.Product;
 import daden.shopaa.entity.ProductVariation;
 import daden.shopaa.entity.User;
 import daden.shopaa.exceptions.BabRequestError;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class CartService {
   private final CartRepo cartRepo;
   private final ProductRepo productRepo;
+  private final ProductService productService;
   private final ProductVariationRepo variationRepo;
   private final UserRepo userRepo;
 
@@ -74,7 +76,7 @@ public class CartService {
             throw new NotFoundError("productVariation id", v.getProductVariationId());
 
           Integer quantity = v.getQuantity() - v.getOldQuantity();
-          Double price = productRepo.findById(optional.get().getProductId()).get().getPrice();
+          Product product = productRepo.findById(optional.get().getProductId()).get();
 
           if (optional.get().getQuantity() < quantity)
             throw new BabRequestError(
@@ -83,8 +85,9 @@ public class CartService {
 
           return CartModel.builder()
               .productVariationId(v.getProductVariationId())
+              .productId(product.getId())
               .quantity(quantity)
-              .price(price)
+              .price(product.getPrice())
               .build();
         })
         .filter(v -> v.getQuantity() != 0)

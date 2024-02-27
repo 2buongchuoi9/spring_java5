@@ -137,8 +137,9 @@ public class ProductService {
 
     List<Product> list = mongoTemplate.find(query, Product.class);
     // list.stream().forEach(v -> {
-    // ProductVariation va = v.getVariations().get(0);
-    // variationRepo.save(va);
+    // Double p = v.getPrice() - Math.ceil(Math.random() * 16 + 5) * 1000;
+    // v.setPriceImport(p);
+    // productRepo.save(v);
     // });
     // System.out.println(list.get(0).getImage());
     return new PageCustom<>(PageableExecutionUtils.getPage(list, pageable, () -> total));
@@ -179,6 +180,15 @@ public class ProductService {
         .orElseThrow(() -> new NotFoundError("id", variationId));
 
     return productRepo.findById(variation.getProductId()).orElseThrow(() -> new NotFoundError("id", variationId));
+  }
+
+  public List<Product> findProductByVariationIds(List<String> validationIds) {
+    Query query = new Query();
+
+    query.addCriteria(Criteria.where("validations").elemMatch(Criteria.where("id").in(validationIds)));
+
+    return mongoTemplate.find(query, Product.class);
+
   }
 
 }

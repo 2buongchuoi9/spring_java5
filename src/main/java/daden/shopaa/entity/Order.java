@@ -33,6 +33,9 @@ public class Order {
   private Double totalShipping;
   private Double totalDiscount;
   private Double totalCheckout;
+  private Double capital;
+  private Double revenue;
+  private Double profit;
   private List<CartModel> items;
   @Default
   private String payment = TypePayment.CASH.name();

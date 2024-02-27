@@ -26,7 +26,7 @@ public class OrderParamRequest {
   private Double minTotalDiscount;
   private Double maxTotalDiscount;
 
-  @DateTimeFormat()
+  @DateTimeFormat
   @JsonFormat(pattern = WebMvcConfig.dateTimeFormat)
   private LocalDateTime startDate;
 

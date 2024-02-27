@@ -12,4 +12,6 @@ public interface ProductVariationRepo extends MongoRepository<ProductVariation, 
   List<ProductVariation> findByProductId(String productId);
 
   Optional<ProductVariation> findByProductIdAndColorAndSize(String productId, String color, String size);
+
+  // findByIdIn
 }
