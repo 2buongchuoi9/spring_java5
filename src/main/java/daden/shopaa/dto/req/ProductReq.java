@@ -17,8 +17,6 @@ public class ProductReq {
   private List<String> images;
   private String description;
   private Double price;
-  @NotNull
-  @NotEmpty
   private Double priceImport;
   private List<String> categoryIds;
   private List<ProductVariationReq> variations;

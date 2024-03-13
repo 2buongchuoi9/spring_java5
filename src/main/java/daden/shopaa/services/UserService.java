@@ -116,6 +116,10 @@ public class UserService {
 
   }
 
+  public String registerTokenVerify(RegisterReq registerReq) {
+    return "ok";
+  }
+
   public User createUserMod(String ipAddress) {
     User foundUser = userRepo.findByEmail(ipAddress + AFTER_EMAIL).orElse(
         User.builder()

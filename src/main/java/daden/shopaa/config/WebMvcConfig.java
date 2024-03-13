@@ -52,11 +52,18 @@ public class WebMvcConfig {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
+        // registry.addMapping("/**")
+        // .allowedHeaders("*")
+        // .allowedMethods("GET", "POST", "OPTIONS")
+        // .allowedOrigins("http://localhost:5173")
+        // .allowCredentials(true);
+
         registry.addMapping("/**")
-            .allowedHeaders("*")
+            .allowedOrigins("/*")
             .allowedMethods("GET", "POST", "OPTIONS")
-            .allowedOrigins("http://localhost:5173")
+            .allowedHeaders("*")
             .allowCredentials(true);
+
       }
     };
   }

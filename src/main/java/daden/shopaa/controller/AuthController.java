@@ -46,6 +46,11 @@ public class AuthController {
     return ResponseEntity.ok().body(MainResponse.oke(shopService.registerLocalv2(registerReq)));
   }
 
+  @PostMapping("/register-v2")
+  public ResponseEntity<MainResponse<LoginRes>> registerV2(@RequestBody RegisterReq registerReq) {
+    return ResponseEntity.ok().body(MainResponse.oke(shopService.registerLocalv2(registerReq)));
+  }
+
   @PostMapping("/refresh-token")
   public ResponseEntity<MainResponse<LoginRes>> refeshToken(HttpServletRequest req) {
     return ResponseEntity.ok().body(MainResponse.oke(shopService.handleRefeshToken(req)));

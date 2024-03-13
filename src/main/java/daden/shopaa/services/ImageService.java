@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import daden.shopaa.entity.Image;
+import daden.shopaa.entity.Product;
 import daden.shopaa.exceptions.NotFoundError;
 import daden.shopaa.repository.ImageRepo;
 import daden.shopaa.repository.repositoryUtils.PageCustom;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @SuppressWarnings({ "null", "rawtypes" })
 public class ImageService {
   private final ImageRepo imageRepo;
+  private final MongoTemplate mongoTemplate;
 
   private final CloudinaryService cloudinaryService;
 
@@ -34,8 +38,10 @@ public class ImageService {
   }
 
   public PageCustom<Image> findAll(Pageable pageable) {
-    List<Image> list = imageRepo.findAll();
+    Query query = new Query();
     long total = imageRepo.count();
+    query.with(pageable);
+    List<Image> list = mongoTemplate.find(query, Image.class);
     return new PageCustom<>(PageableExecutionUtils.getPage(list, pageable, () -> total));
   }
 
