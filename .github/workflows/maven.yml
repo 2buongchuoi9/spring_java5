@@ -24,6 +24,9 @@ jobs:
                   java-version: "21"
                   distribution: "temurin"
                   cache: maven
+            - run: |
+                  mkdir -p src/main/resources/templates && touch src/main/resources/templates/application.properties
+                  echo "${{ secrets.MY_ENV }}" >> src/main/resources/templates/application.properties
             - name: Build with Maven
               run: mvn -B package --file pom.xml
             # - name: Execute jar file
