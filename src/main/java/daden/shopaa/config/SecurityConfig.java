@@ -53,7 +53,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import daden.shopaa.entity.User;
 import daden.shopaa.exceptions.CustomExceptionHandler;
-import daden.shopaa.logs.DiscordLogFilter;
 import daden.shopaa.repository.UserRepo;
 import daden.shopaa.security.CustomOAuth2UserService;
 import daden.shopaa.security.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -63,7 +62,6 @@ import daden.shopaa.security.UserRootService;
 import daden.shopaa.security.jwt.JwtAuthenticationFilter;
 import daden.shopaa.utils.Constans;
 import daden.shopaa.utils.Constans.FREE_REQUEST;
-import discord4j.core.DiscordClientBuilder;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 
@@ -78,7 +76,6 @@ public class SecurityConfig {
   final CustomOAuth2UserService customOAuth2UserService;
   final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
   final HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository;
-  final DiscordLogFilter discordLogFilter;
 
   private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**",
       "/test/*",

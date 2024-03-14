@@ -109,11 +109,11 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.discord4j/discord4j-core -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.discord4j</groupId>
 			<artifactId>discord4j-core</artifactId>
 			<version>3.2.6</version>
-		</dependency>
+		</dependency> -->
 
 
 		
