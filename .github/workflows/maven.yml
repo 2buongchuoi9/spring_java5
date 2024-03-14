@@ -28,6 +28,6 @@ jobs:
                   distribution: "temurin"
                   cache: maven
             - name: ZBuild with Maven
-              run: mvn -B package --file pom.xml
+              run: mvn package
             # - name: Execute jar file
             #   run: sudo kill -9 `sudo lsof -t -i:8081` & sudo java -jar /home/ubuntu/actions-runner/_work/spring_java5/spring_java5/target - # tắt cổng
