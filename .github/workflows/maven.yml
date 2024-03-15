@@ -30,9 +30,9 @@ jobs:
                   mkdir -p src/main/resources/static
                   touch src/main/resources/templates/application.properties
                   echo "${{ secrets.MY_ENV }}" >> src/main/resources/templates/application.properties
+                  chmod 600 src/main/resources/templates/application.properties
 
             - run: ls -la src/main/resources/templates
-
             - name: ZBuild with Maven
               run: mvn package
             # - name: Execute jar file
