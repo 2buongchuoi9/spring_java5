@@ -26,10 +26,10 @@ jobs:
                   cache: maven
 
             - run: |
-                  mkdir -p src/main/resources/templates
-                  mkdir -p src/main/resources/static
-                  touch src/main/resources/templates/application.properties
-                  echo "${{ secrets.MY_ENV }}" >> src/main/resources/templates/application.properties
+                  mkdir -p src/main/resources/
+                  # mkdir -p src/main/resources
+                  touch src/main/resources/application.properties
+                  echo "${{ secrets.MY_ENV }}" >> src/main/resources/application.properties
 
             - run: ls -la src/main/resources/templates
             - name: Build with Maven
