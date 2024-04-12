@@ -80,6 +80,7 @@ public class SecurityConfig {
   private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**",
       "/test/*",
       "/api/v1/auth/conver-mod-to-user",
+      "/api/v1/student/**",
       "/login",
       Constans.API_V1 + "/cc",
       FREE_REQUEST.AUTH + "/login",
